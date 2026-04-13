@@ -1,0 +1,230 @@
+/* styles/style.css */
+
+/* General Body and Font Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+h1, h2 {
+    color: #1a253c;
+    border-bottom: 2px solid #eef2f5;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+/* Section Styling */
+section {
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #fafcff;
+    border: 1px solid #eef2f5;
+    border-radius: 8px;
+}
+
+/* Input, Select, and Button Styling */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#logoutButton {
+    background-color: #dc3545;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+}
+
+#logoutButton:hover {
+    background-color: #c82333;
+}
+
+/* List Styling - Turning them into cards */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Condo List Item - The main improvement area */
+.condo-item {
+    background-color: #fff;
+    border: 1px solid #e1e8ed;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+}
+
+.condo-item .info {
+    flex-grow: 1;
+}
+
+.condo-item .info strong {
+    font-size: 1.2em;
+    color: #1a253c;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.condo-item .info small {
+    display: block;
+    color: #657786;
+    margin-bottom: 5px;
+}
+
+.condo-item .info small i {
+    color: #999;
+}
+
+.condo-item .actions {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+    margin-top: 10px; /* Add margin on top for smaller screens */
+}
+
+.condo-item .actions button {
+    background-color: #28a745;
+    padding: 8px 12px;
+    font-size: 0.9em;
+}
+
+.condo-item .actions button:hover {
+    background-color: #218838;
+}
+
+
+/* User List Item */
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #e1e8ed;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: #fff;
+}
+
+.user-item span {
+    color: #333;
+}
+
+.user-item .role {
+    font-weight: bold;
+    background-color: #eef2f5;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    color: #555;
+}
+
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 30px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#modalUserList {
+    list-style: none;
+    padding: 0;
+}
+
+.modal-user-item {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.modal-user-item:hover {
+    background-color: #f1f1f1;
+}
+
+.modal-user-item:last-child {
+    border-bottom: none;
+}

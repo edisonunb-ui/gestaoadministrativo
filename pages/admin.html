@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Superadmin - Gestão de Condomínios</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Painel Superadmin</h1>
+
+        <!-- Seções de criação -->
+        <section>
+            <h2>Criar Usuário</h2>
+            <input type="text" id="userName" placeholder="Nome do Usuário">
+            <input type="email" id="userEmail" placeholder="E-mail do Usuário">
+            <input type="password" id="userPassword" placeholder="Senha do Usuário">
+            <select id="userRole">
+                <option value="admin">Admin</option>
+                <option value="sindico">Síndico</option>
+            </select>
+            <button id="createUserButton">Criar Usuário</button>
+        </section>
+
+        <section>
+            <h2>Criar Condomínio</h2>
+            <input type="text" id="condoName" placeholder="Nome do Condomínio">
+            <button id="createCondoButton">Criar Condomínio</button>
+        </section>
+
+        <!-- Seções de listagem -->
+        <section>
+            <h2>Listar Condomínios</h2>
+            <ul id="condoList"></ul>
+        </section>
+
+        <section>
+            <h2>Listar Usuários</h2>
+            <ul id="userList"></ul>
+        </section>
+
+        <button id="logoutButton">Sair</button>
+    </div>
+
+    <!-- Janela Modal para Designação (inicialmente escondida) -->
+    <div id="assignModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="modalTitle">Selecione um usuário</h2>
+            <ul id="modalUserList"></ul>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+    <!-- Seus Scripts -->
+    <script src="../services/firebase.js"></script>
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/admin.js"></script>
+</body>
+</html>
