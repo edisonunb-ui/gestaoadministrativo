@@ -1,50 +1,46 @@
-# To learn more about how to use Nix to configure your environment
-# see: https://developers.google.com/idx/guides/customize-idx-env
+# Para saber mais sobre como usar o Nix para configurar seu ambiente
+# veja: https://developers.google.com/idx/guides/customize-idx-env
 { pkgs, ... }: {
-  # Which nixpkgs channel to use.
-  channel = "stable-24.11"; # or "unstable"
-  # Use https://search.nixos.org/packages to find packages
+  # Qual canal do nixpkgs usar.
+  channel = "stable-24.11"; # ou "unstable"
+  
+  # Use https://search.nixos.org/packages para encontrar pacotes
   packages = [
-    pkgs.python3 # Adicionado para termos acesso ao Python
-    # pkgs.go
-    # pkgs.python311
-    # pkgs.python311Packages.pip
-    # pkgs.nodejs_22
-    # pkgs.nodePackages.nodemon
+    pkgs.nodejs_22 # Instala Node.js para usar 'serve'
   ];
-  # Sets environment variables in the workspace
+  
+  # Define variáveis de ambiente no workspace
   env = {};
+  
   idx = {
-    # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
+    # Procure as extensões que você deseja em https://open-vsx.org/ e use "publisher.id"
     extensions = [
-      # "vscodevim.vim"
       "google.gemini-cli-vscode-ide-companion"
     ];
-    # Enable previews
+    
+    # Habilita o preview e define o comando do servidor web
     previews = {
       enable = true;
       previews = {
         web = {
-          # Example: run "npm run dev" with PORT set to IDX's defined port for previews,
-          # and show it in IDX's web preview panel
-          command = ["python3", "-m", "http.server", "$PORT"];
+          # Este comando inicia o servidor 'serve' na porta fornecida pelo IDX.
+          # O 'serve' serve a pasta atual (onde os arquivos HTML/CSS/JS estão).
+          command = ["serve", "-l", "$PORT"];
           manager = "web";
         };
       };
     };
-    # Workspace lifecycle hooks
+    
+    # Hooks do ciclo de vida do workspace
     workspace = {
-      # Runs when a workspace is first created
+      # Roda quando um workspace é criado pela primeira vez
       onCreate = {
-        # Example: install JS dependencies from NPM
-        # npm-install = "npm install";
-        # Open editors for the following files by default, if they exist:
-        default.openFiles = [ ".idx/dev.nix" "README.md" ];
+        default.openFiles = [ "index.html" "services/firebase.js" ];
+        install-serve = "npm install -g serve"; # Instala 'serve' globalmente
       };
-      # Runs when the workspace is (re)started
+      # Roda quando o workspace é (re)iniciado
       onStart = {
-        # Example: start a background task to watch and re-build backend code
-        # watch-backend = "npm run watch-backend";
+        # Não é necessário um comando onStart adicional, pois 'serve' é iniciado no preview.
       };
     };
   };

@@ -9,6 +9,72 @@ const modalTitle = document.getElementById('modalTitle');
 const modalUserList = document.getElementById('modalUserList');
 const closeButton = document.querySelector('.close-button');
 
+// --- ELEMENTOS DE UPLOAD ---
+const fileInput = document.getElementById('fileInput');
+const uploadButton = document.getElementById('uploadButton');
+const uploadProgress = document.getElementById('uploadProgress');
+const condoForUpload = document.getElementById('condoForUpload');
+
+
+// --- LÓGICA DE UPLOAD ORGANIZADO ---
+if (uploadButton) {
+    uploadButton.addEventListener('click', () => {
+        const file = fileInput.files[0];
+        const selectedCondoId = condoForUpload.value;
+
+        if (!file) {
+            alert('Por favor, selecione um arquivo.');
+            return;
+        }
+        if (!selectedCondoId) {
+            alert('Por favor, selecione um condomínio.');
+            return;
+        }
+
+        // Caminho organizado no Storage: /condominios/{condoId}/nome_do_arquivo
+        const storagePath = `condominios/${selectedCondoId}/${file.name}`;
+        const storageRef = storage.ref(storagePath);
+
+        const uploadTask = storageRef.put(file);
+
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                uploadProgress.value = progress;
+                uploadProgress.style.display = 'block';
+            },
+            (error) => {
+                console.error("Erro no upload: ", error);
+                alert("Ocorreu um erro ao enviar o arquivo.");
+                uploadProgress.style.display = 'none';
+            },
+            () => {
+                // Upload concluído com sucesso
+                uploadProgress.style.display = 'none';
+                fileInput.value = ''; // Limpa o campo
+
+                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                    console.log('Arquivo disponível em', downloadURL);
+                    
+                    // Salva a "ficha" do documento no Firestore
+                    db.collection('documentos').add({
+                        condominioId: selectedCondoId,
+                        nomeArquivo: file.name,
+                        url: downloadURL,
+                        path: storagePath, // Salva o caminho para futuras operações (ex: deletar)
+                        dataUpload: new Date()
+                    }).then(() => {
+                        alert('Arquivo enviado e registrado com sucesso!');
+                    }).catch(err => {
+                        console.error("Erro ao salvar registro do documento: ", err);
+                        alert("Arquivo enviado, mas falha ao registrar no banco de dados.");
+                    });
+                });
+            }
+        );
+    });
+}
+
 // --- LÓGICA DE DESIGNAÇÃO ---
 
 function closeModal() {
@@ -39,9 +105,9 @@ async function showAssignModal(condoId, condoName, roleToAssign) {
                 const user = userDoc.data();
                 const userId = userDoc.id;
                 const userItem = document.createElement('li');
-                userItem.innerHTML = `${user.name} <small>(${user.email})</small>`; // Mostra Nome e Email
+                userItem.innerHTML = `${user.name} <small>(${user.email})</small>`;
                 userItem.classList.add('modal-user-item');
-                userItem.onclick = () => assignUserToCondo(condoId, userId, user.name, roleToAssign); // Passa o NOME para a designação
+                userItem.onclick = () => assignUserToCondo(condoId, userId, user.name, roleToAssign);
                 modalUserList.appendChild(userItem);
             });
         }
@@ -51,11 +117,11 @@ async function showAssignModal(condoId, condoName, roleToAssign) {
     }
 }
 
-async function assignUserToCondo(condoId, userId, userName, role) { // Agora recebe userName
+async function assignUserToCondo(condoId, userId, userName, role) {
     const condoRef = db.collection('condominios').doc(condoId);
     const updateData = {};
     updateData[`${role}Id`] = userId;
-    updateData[`${role}Name`] = userName; // Salva o NOME no condomínio
+    updateData[`${role}Name`] = userName;
 
     try {
         await condoRef.update(updateData);
@@ -68,7 +134,7 @@ async function assignUserToCondo(condoId, userId, userName, role) { // Agora rec
     }
 }
 
-// --- CARREGAMENTO DE DADOS (COM NOME E EMAIL) ---
+// --- CARREGAMENTO DE DADOS ---
 
 function loadUsers() {
     if (!userList) return;
@@ -133,12 +199,38 @@ function loadCondos() {
     }).catch(error => console.error("Erro ao carregar condomínios: ", error));
 }
 
+// --- FUNÇÃO PARA CARREGAR CONDOMÍNIOS NO SELETOR DE UPLOAD ---
+function loadCondosForUpload() {
+    if (!condoForUpload) return;
+
+    db.collection('condominios').orderBy('name').get().then(querySnapshot => {
+        condoForUpload.innerHTML = '<option value="">-- Selecione um condomínio --</option>';
+        if (querySnapshot.empty) {
+            condoForUpload.innerHTML = '<option value="">-- Nenhum condomínio cadastrado --</option>';
+        }
+        querySnapshot.forEach(doc => {
+            const condo = doc.data();
+            const option = document.createElement('option');
+            option.value = doc.id; // O valor da opção é o ID do documento
+            option.textContent = condo.name;
+            condoForUpload.appendChild(option);
+        });
+    }).catch(error => {
+        console.error("Erro ao carregar condomínios para upload: ", error);
+        condoForUpload.innerHTML = '<option value="">-- Erro ao carregar --</option>';
+    });
+}
+
+
+// --- INICIALIZAÇÃO QUANDO A PÁGINA CARREGA ---
+
 window.addEventListener('DOMContentLoaded', () => {
     loadUsers();
     loadCondos();
+    loadCondosForUpload(); // <-- Chamar a nova função aqui
 });
 
-// --- AÇÕES DOS BOTÕES (COM CAMPO NOME) ---
+// --- AÇÕES DOS BOTÕES (CRIAR USUÁRIO E CONDOMÍNIO) ---
 
 if (createUserButton) {
     createUserButton.addEventListener('click', () => {
@@ -177,6 +269,7 @@ if (createCondoButton) {
                 alert(`Condomínio "${condoName}" criado com sucesso!`);
                 document.getElementById('condoName').value = '';
                 loadCondos();
+                loadCondosForUpload(); // Recarrega o seletor de upload também
             })
             .catch(error => console.error("Erro ao criar condomínio: ", error));
     });

@@ -40,6 +40,31 @@
             <ul id="userList"></ul>
         </section>
 
+        <section>
+            <h2>Envio de Documentos</h2>
+            <label for="condoForUpload">Selecione o Condomínio:</label>
+            <select id="condoForUpload" required>
+                <option value="">-- Carregando condomínios... --</option>
+            </select>
+            <input type="file" id="fileInput">
+            <button id="uploadButton">Enviar Documento</button>
+            <progress id="uploadProgress" value="0" max="100" style="width: 100%; display: none;"></progress>
+        </section>
+
+        <section>
+            <h2>Visualizar Documentos</h2>
+            <div style="margin-top:20px">
+                <button onclick="abrirAta()">📄 Visualizar ATA</button>
+                <div id="viewer" style="margin-top:15px; display:none;">
+                    <iframe id="frameAta"
+                      width="100%"
+                      height="600"
+                      style="border-radius:10px; border:1px solid #ccc;">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
         <button id="logoutButton">Sair</button>
     </div>
 
@@ -62,5 +87,34 @@
     <script src="../services/firebase.js"></script>
     <script src="../scripts/auth.js"></script>
     <script src="../scripts/admin.js"></script>
+    <script>
+        const ATA_ID = "COLOQUE_AQUI_O_ID_DO_DRIVE" // Substitua pelo ID real do seu documento no Google Drive
+
+        function abrirAta() {
+            // monta URL segura (sem expor direto no HTML)
+            const url = `https://drive.google.com/file/d/${ATA_ID}/preview`
+
+            document.getElementById('frameAta').src = url
+            document.getElementById('viewer').style.display = 'block'
+
+            registrarLog("Visualizou ATA")
+        }
+
+        // log simples (depois pode mandar pro Firebase)
+        function registrarLog(acao) {
+            const usuario = localStorage.getItem("usuario") || "desconhecido"
+
+            const log = {
+                usuario,
+                acao,
+                data: new Date().toISOString()
+            }
+
+            console.log("LOG:", log)
+
+            // futuramente:
+            // enviar para backend ou firebase
+        }
+    </script>
 </body>
 </html>

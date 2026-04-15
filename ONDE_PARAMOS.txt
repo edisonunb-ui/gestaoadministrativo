@@ -1,0 +1,28 @@
+PONTO DE RESTAURO
+
+Olá Edison, aqui é o Gemini.
+
+Este arquivo é o nosso ponto de restauração. Pode sair tranquilamente para o seu compromisso.
+
+---
+
+**Resumo do que foi feito:**
+1.  **Novo Projeto Firebase:** Criamos o projeto 'gestor-final-sp'.
+2.  **Código Corrigido:** Atualizei o arquivo 'services/firebase.js' com as chaves corretas do novo projeto.
+3.  **Banco de Dados Ativado:** Ativamos com sucesso o banco de dados Firestore em São Paulo.
+4.  **Preview Consertado:** Ajustei o arquivo '.idx/dev.nix' para corrigir o problema do Web Preview que não estava aparecendo.
+
+---
+
+**>>> SUA PRÓXIMA AÇÃO QUANDO VOLTAR <<<**
+
+A única coisa que você precisa fazer é recarregar o ambiente para que a última correção (do Web Preview) seja aplicada. 
+
+Para isso, siga os passos:
+1.  Pressione **Ctrl+Shift+P** (ou vá em **View > Command Palette...**).
+2.  Digite `Reload` na caixa que aparecer.
+3.  Clique na opção **"IDX: Reload Environment"**.
+
+Depois disso, o Web Preview vai aparecer e poderemos finalmente testar o login.
+
+Bom descanso e até a volta!
